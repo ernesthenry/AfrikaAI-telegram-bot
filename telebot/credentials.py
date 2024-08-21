@@ -1,3 +1,3 @@
-bot_token = "here goes your access token from BotFather"
-bot_user_name = "the username you entered"
-URL = "the heroku app link that we will create later"
+bot_token = "6818039291:AAEZx_ZGs3slNr2-PjJTGmhELzbSDZVhcJM"
+bot_user_name = "msemakweli_bot"
+URL = "https://afrikaai-telegram-bot.onrender.com"
