@@ -1,3 +1,4 @@
+import asyncio
 import re
 import os
 import time
@@ -36,9 +37,9 @@ def respond():
             governments ensuring they comply with existing policies.
         """
         # Send the welcoming message
-        bot.sendChatAction(chat_id=chat_id, action="typing")
+        asyncio.run(bot.sendChatAction(chat_id=chat_id, action="typing"))
         time.sleep(1.5)
-        bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)
+        asyncio.run(bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id))
     else:
         try:
             # Generate AI response
@@ -46,14 +47,14 @@ def respond():
             # Send AI-generated response
             bot.sendChatAction(chat_id=chat_id, action="typing")
             time.sleep(1.5)
-            bot.sendMessage(chat_id=chat_id, text=ai_reply, reply_to_message_id=msg_id)
+            asyncio.run(bot.sendMessage(chat_id=chat_id, text=ai_reply, reply_to_message_id=msg_id))
         except Exception as e:
             print("Error:", e)
-            bot.sendMessage(
+            asyncio.run(bot.sendMessage(
                 chat_id=chat_id,
                 text="There was an error processing your request. Please try again.",
                 reply_to_message_id=msg_id
-            )
+            ))
 
     return 'ok'
 
