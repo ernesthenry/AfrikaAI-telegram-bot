@@ -54,7 +54,7 @@ async def respond():
                 reply_to_message_id=msg_id
             )
 
-    return 'ok'
+    return 'ok', 200
 
 @app.route('/set_webhook', methods=['GET', 'POST'])
 async def set_webhook():
