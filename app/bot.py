@@ -3,21 +3,23 @@ import os
 import telegram
 import openai
 from app import app
-from flask import request
+from quart import Quart, request
 from dotenv import load_dotenv
 from app.ai import generate_smart_reply
+from telegram.request import HTTPXRequest
 load_dotenv()
 # Set up OpenAI API key
 openai.api_key = os.getenv("OPENAI_API")
 URL = os.getenv("BOT_URL")
 # Initialize Telegram Bot
 TOKEN = os.getenv("BOT_TOKEN")
-bot = telegram.Bot(token=TOKEN)
+trequest = HTTPXRequest(connection_pool_size=20)
+bot = telegram.Bot(token=TOKEN, request=trequest)
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
 async def respond():
     # Retrieve the message in JSON and then transform it to Telegram object
-    update = telegram.Update.de_json(request.get_json(force=True), bot)
+    update = telegram.Update.de_json(await request.get_json(force=True), bot)
 
     chat_id = update.message.chat.id
     msg_id = update.message.message_id
