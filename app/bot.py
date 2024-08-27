@@ -1,7 +1,5 @@
 import asyncio
-import re
 import os
-import time
 import telegram
 import openai
 from app import app
@@ -17,7 +15,7 @@ TOKEN = os.getenv("BOT_TOKEN")
 bot = telegram.Bot(token=TOKEN)
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
-def respond():
+async def respond():
     # Retrieve the message in JSON and then transform it to Telegram object
     update = telegram.Update.de_json(request.get_json(force=True), bot)
 
@@ -37,30 +35,30 @@ def respond():
             governments ensuring they comply with existing policies.
         """
         # Send the welcoming message
-        asyncio.run(bot.sendChatAction(chat_id=chat_id, action="typing"))
-        time.sleep(1.5)
-        asyncio.run(bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id))
+        await bot.sendChatAction(chat_id=chat_id, action="typing")
+        await asyncio.sleep(1.5)
+        await bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)
     else:
         try:
             # Generate AI response
-            ai_reply = generate_smart_reply(text)
+            ai_reply = await generate_smart_reply(text)
             # Send AI-generated response
-            bot.sendChatAction(chat_id=chat_id, action="typing")
-            time.sleep(1.5)
-            asyncio.run(bot.sendMessage(chat_id=chat_id, text=ai_reply, reply_to_message_id=msg_id))
+            await bot.sendChatAction(chat_id=chat_id, action="typing")
+            await asyncio.sleep(1.5)
+            await bot.sendMessage(chat_id=chat_id, text=ai_reply, reply_to_message_id=msg_id)
         except Exception as e:
             print("Error:", e)
-            asyncio.run(bot.sendMessage(
+            await bot.sendMessage(
                 chat_id=chat_id,
                 text="There was an error processing your request. Please try again.",
                 reply_to_message_id=msg_id
-            ))
+            )
 
     return 'ok'
 
 @app.route('/set_webhook', methods=['GET', 'POST'])
-def set_webhook():
-    s = bot.setWebhook('{URL}{HOOK}'.format(URL=URL, HOOK=TOKEN))
+async def set_webhook():
+    s = await bot.setWebhook('{URL}{HOOK}'.format(URL=URL, HOOK=TOKEN))
     if s:
         return "Webhook setup ok"
     else:
